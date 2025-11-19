@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  mchs-bot:
+    build: .
+    container_name: mchs_max_bot
+    restart: always
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+    volumes:
+      - .:/app
+    working_dir: /app
