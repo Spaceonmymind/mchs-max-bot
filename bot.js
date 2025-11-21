@@ -67,5 +67,30 @@ bot.action(/back:(.+)/, async(ctx) => {
     }
 });
 
+
+bot.on("message_created", async(ctx, next) => {
+    let text = null
+
+    if (ctx.message && ctx.message.body && ctx.message.body.text) {
+        text = ctx.message.body.text
+    }
+
+    if (text) {
+        if (text.indexOf("/start") === 0) {
+            return next()
+        }
+
+        await ctx.reply(
+            "Я не обрабатываю текстовые сообщения\nПожалуйста используйте меню ниже", { format: "html" }
+        )
+
+        return startHandler(ctx)
+    }
+
+    return next()
+})
+
+
+
 console.log("BOT STARTED");
 bot.start();
