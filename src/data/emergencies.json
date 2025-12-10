@@ -121,5 +121,14 @@
     "message": "Что-то где-то упало",
     "timestamp": 1765263972842,
     "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "chatId": 83345405,
+    "phone": "+79964532733",
+    "type": "custom",
+    "message": "Ооо",
+    "timestamp": 1765356724737,
+    "status": "answered"
   }
 ]
