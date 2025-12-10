@@ -5,11 +5,13 @@
     "main": "bot.js",
     "scripts": {
         "start": "node bot.js",
-        "dev": "nodemon bot.js"
+        "dev": "nodemon bot.js",
+        "admin": "nodemon adminServer.js"
     },
     "dependencies": {
         "@maxhub/max-bot-api": "^0.2.1",
-        "dotenv": "^17.2.3"
+        "dotenv": "^17.2.3",
+        "express": "^5.2.1"
     },
     "devDependencies": {
         "nodemon": "^3.1.4"

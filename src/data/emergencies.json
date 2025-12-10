@@ -1,0 +1,125 @@
+[
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "custom",
+    "message": "Хелп",
+    "timestamp": 1765188924338,
+    "status": "read"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "drone",
+    "message": "Хелп",
+    "timestamp": 1765188936716,
+    "status": "read"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "custom",
+    "message": "Хелп",
+    "timestamp": 1765189381259,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "drone",
+    "message": "Я Егор гладких",
+    "timestamp": 1765189401330,
+    "status": "read"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "custom",
+    "message": "Хелп",
+    "timestamp": 1765189491240,
+    "status": "read"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "drone",
+    "message": "Дрон",
+    "timestamp": 1765189498513,
+    "status": "read"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "custom",
+    "message": "Гладких",
+    "timestamp": 1765194077832,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "phone": "не указан",
+    "type": "custom",
+    "message": "Хеллоу",
+    "timestamp": 1765194092664,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "phone": "+79195994669",
+    "type": "custom",
+    "message": "Гладких",
+    "timestamp": 1765195048213,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "phone": "+79195994669",
+    "type": "drone",
+    "message": "Дрон Дрон",
+    "timestamp": 1765195075703,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "phone": "+79195994669",
+    "type": "custom",
+    "message": "Приветик",
+    "timestamp": 1765197301689,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "phone": "+79195994669",
+    "type": "custom",
+    "message": "Гладких",
+    "timestamp": 1765199084873,
+    "status": "new"
+  },
+  {
+    "userId": 83345405,
+    "chatId": 83345405,
+    "phone": "+79195994669",
+    "type": "custom",
+    "message": "Ура я не Егор",
+    "timestamp": 1765200656161,
+    "status": "answered"
+  },
+  {
+    "userId": 93102859,
+    "chatId": 93102859,
+    "phone": "+79097237766",
+    "type": "drone",
+    "message": "Тест",
+    "timestamp": 1765263937043,
+    "status": "answered"
+  },
+  {
+    "userId": 93102859,
+    "chatId": 93102859,
+    "phone": "+79097237766",
+    "type": "drone",
+    "message": "Что-то где-то упало",
+    "timestamp": 1765263972842,
+    "status": "new"
+  }
+]
