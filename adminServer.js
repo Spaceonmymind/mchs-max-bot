@@ -134,7 +134,7 @@ app.post("/admin/reply", async(req, res) => {
     if (!item) return res.json({ ok: false })
 
     try {
-        // ВАЖНО: передаём просто строку
+
         await botClient.api.sendMessageToChat(item.chatId, text)
 
         item.status = "answered"

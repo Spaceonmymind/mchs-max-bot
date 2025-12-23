@@ -1,34 +1,99 @@
-import fs from "fs"
-import path from "path"
+// utils/emergencyStore.js
 
-const filePath = path.resolve("src/data/emergencies.json")
+import fs from 'fs';
+import path from 'path';
+import { logger } from './logger.js';
 
-function loadData() {
-    if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, "[]")
-        return []
-    }
+const FILE_PATH = path.resolve('src/data/emergencies.json');
 
+/**
+ * Хранилище в памяти
+ */
+let emergencies = [];
+
+/**
+ * Флаг, что есть изменения
+ */
+let dirty = false;
+
+/**
+ * Загрузка данных при старте бота
+ */
+function loadFromDisk() {
     try {
-        const raw = fs.readFileSync(filePath, "utf8")
-        if (!raw.trim()) {
-            fs.writeFileSync(filePath, "[]")
-            return []
+        if (!fs.existsSync(FILE_PATH)) {
+            emergencies = [];
+            return;
         }
 
-        return JSON.parse(raw)
-    } catch (e) {
-        fs.writeFileSync(filePath, "[]")
-        return []
+        const raw = fs.readFileSync(FILE_PATH, 'utf-8');
+        emergencies = JSON.parse(raw);
+
+        if (!Array.isArray(emergencies)) {
+            emergencies = [];
+        }
+    } catch (err) {
+        logger.error('Failed to load emergencies', err);
+        emergencies = [];
     }
 }
 
-export function saveEmergency(record) {
-    const data = loadData()
-    data.push(record)
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+/**
+ * Асинхронная запись на диск
+ */
+function flushToDisk() {
+    if (!dirty) return;
+
+    const data = JSON.stringify(emergencies, null, 2);
+    dirty = false;
+
+    fs.writeFile(FILE_PATH, data, 'utf-8', function(err) {
+        if (err) {
+            logger.error('Failed to save emergencies', err);
+            dirty = true;
+        }
+    });
 }
 
+/**
+ * Автосброс на диск раз в 3 секунды
+ */
+setInterval(flushToDisk, 3000);
+
+/**
+ * Инициализация при импорте
+ */
+loadFromDisk();
+
+/**
+ * Сохранить новое обращение
+ */
+export async function saveEmergency(emergency) {
+    if (!emergency) return;
+
+    emergencies.push(emergency);
+    dirty = true;
+
+    logger.info('Emergency saved', {
+        chatId: emergency.chatId,
+        type: emergency.type
+    });
+}
+
+/**
+ * Получить все обращения
+ */
 export function getEmergencies() {
-    return loadData()
+    return emergencies;
+}
+
+/**
+ * Обновить статус обращения
+ */
+export function updateEmergencyStatus(index, status) {
+    if (typeof index !== 'number') return;
+    if (!emergencies[index]) return;
+
+    emergencies[index].status = status;
+    dirty = true;
 }

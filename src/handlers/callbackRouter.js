@@ -1,47 +1,55 @@
-import categoryHandler from "./categoryHandler.js"
-import topicHandler from "./topicHandler.js"
-import startHandler from "./start.js"
-import { setState } from "../utils/state.js"
+import { setState, clearState } from '../utils/state.js';
+import { send } from '../utils/send.js';
+import { logger } from '../utils/logger.js';
 
-export default async function callbackRouter(ctx) {
-    let data = null
-
-    if (ctx.update && ctx.update.callback_query && ctx.update.callback_query.data) {
-        data = ctx.update.callback_query.data
+export async function callbackRouter(ctx) {
+    if (!ctx || !ctx.chat || !ctx.callbackQuery || !ctx.callbackQuery.data) {
+        return;
     }
 
-    if (!data) {
-        return
+    const chatId = ctx.chat.id;
+    const data = ctx.callbackQuery.data;
+
+    logger.info('[CALLBACK]', {
+        chatId: chatId,
+        data: data
+    });
+
+    // --- КНОПКА НАЗАД ---
+    if (data === 'back') {
+        clearState(chatId);
+        await send(ctx, 'Вы вернулись в главное меню');
+        return;
     }
 
-    if (data === "send_message") {
-        setState(ctx.chat.id, "mode", "await_message")
-        setState(ctx.chat.id, "type", "custom")
-        await ctx.reply("Пожалуйста напишите ваше сообщение")
-        return
+    // --- КАТЕГОРИЯ ДРОН ---
+    if (data === 'category_drone') {
+        setState(chatId, {
+            step: 'await_message',
+            type: 'drone'
+        });
+
+        await send(ctx, 'Опишите ситуацию с дроном');
+        return;
     }
 
-    if (data === "drone_report") {
-        setState(ctx.chat.id, "mode", "await_message")
-        setState(ctx.chat.id, "type", "drone")
-        await ctx.reply("Опишите место время и обстоятельства падения дрона")
-        return
+    // --- ПРОИЗВОЛЬНОЕ СООБЩЕНИЕ ---
+    if (data === 'category_custom') {
+        setState(chatId, {
+            step: 'await_message',
+            type: 'custom'
+        });
+
+        await send(ctx, 'Опишите ситуацию');
+        return;
     }
 
-    if (data.indexOf("cat:") === 0) {
-        const parts = data.split(":")
-        return categoryHandler(ctx, parts[1])
-    }
+    // --- НЕИЗВЕСТНЫЙ CALLBACK ---
+    logger.warn('[UNKNOWN CALLBACK]', {
+        chatId: chatId,
+        data: data
+    });
 
-    if (data.indexOf("topic:") === 0) {
-        const parts = data.split(":")
-        return topicHandler(ctx, parts[1], parts[2])
-    }
-
-    if (data.indexOf("back:") === 0) {
-        const target = data.split(":")[1]
-        if (target === "main") {
-            return startHandler(ctx)
-        }
-    }
+    clearState(chatId);
+    await send(ctx, 'Неизвестная команда. Пожалуйста начните заново');
 }

@@ -1,43 +1,64 @@
-import { getState, clearState } from "../utils/state.js"
+// src/handlers/messageHandler.js
+
+import { getState, setState, clearState } from "../utils/state.js"
 import { saveEmergency } from "../utils/emergencyStore.js"
-import { getChatId } from "../utils/getChatId.js"
-import { cleanChat } from "../utils/cleanChat.js"
 
 export default async function messageHandler(ctx) {
-    const chatId = getChatId(ctx)
-    if (!chatId) return false
-
-    const s = getState(chatId)
-    if (!s || s.mode !== "await_message") {
-        return false
+    if (!ctx || !ctx.chat || !ctx.message || !ctx.message.body) {
+        return
     }
 
-    const userMessage =
-        ctx && ctx.message && ctx.message.body && ctx.message.body.text ?
-        ctx.message.body.text :
-        "";
+    const chatId = ctx.chat.id
+    const text = ctx.message.body.text
 
-    const phone = s.phone || "не указан";
+    if (!text) {
+        return
+    }
 
-    const record = {
-        userId: chatId,
-        chatId: chatId,
-        phone: phone,
-        type: s.type,
-        message: userMessage,
-        timestamp: Date.now(),
-        status: "new"
-    };
+    const message = text.trim()
+    const state = getState(chatId)
+    const step = state.step
 
+    // --- ШАГ 1 ОЖИДАЕМ ТЕЛЕФОН ---
+    if (step === "await_phone") {
+        if (!message.match(/^\+7\d{10}$/)) {
+            await ctx.reply("Пожалуйста, укажите номер телефона в формате +7XXXXXXXXXX")
+            return
+        }
 
-    saveEmergency(record)
+        setState(chatId, {
+            phone: message,
+            step: "await_message"
+        })
 
-    await cleanChat(ctx)
+        await ctx.reply("Спасибо. Теперь опишите ситуацию")
+        return
+    }
 
-    await ctx.reply(
-        "Спасибо. Ваше сообщение принято. При необходимости с вами свяжутся."
-    )
+    // --- ШАГ 2 ОЖИДАЕМ СООБЩЕНИЕ ---
+    if (step === "await_message") {
+        if (message.length < 3) {
+            await ctx.reply("Сообщение слишком короткое. Опишите ситуацию подробнее")
+            return
+        }
 
-    clearState(chatId)
-    return true
+        const emergency = {
+            chatId: chatId,
+            phone: state.phone,
+            type: state.type || "custom",
+            message: message,
+            timestamp: Date.now(),
+            status: "new"
+        }
+
+        await saveEmergency(emergency)
+
+        clearState(chatId)
+
+        await ctx.reply("Сообщение принято и передано оператору. Спасибо!")
+        return
+    }
+
+    // --- НЕТ АКТИВНОГО СЦЕНАРИЯ ---
+    await ctx.reply("Пожалуйста, выберите действие в меню")
 }

@@ -1,27 +1,40 @@
-const userState = new Map();
+const stateStore = new Map();
 
-export function setState(userId, key, value) {
-    if (!userId) return;
-
-    if (!userState.has(userId)) {
-        userState.set(userId, {});
-    }
-
-    const obj = userState.get(userId);
-    obj[key] = value;
+/**
+ * Получить состояние чата
+ * @param {number|string} chatId
+ */
+export function getState(chatId) {
+    if (!chatId) return {};
+    return stateStore.get(chatId) || {};
 }
 
-export function getState(userId) {
-    if (!userId) return {};
+/**
+ * Установить/обновить состояние чата
+ * (merge, а не overwrite)
+ * @param {number|string} chatId
+ * @param {object} data
+ */
+export function setState(chatId, data) {
+    if (!chatId || !data) return;
 
-    if (!userState.has(userId)) return {};
-
-    return userState.get(userId);
+    const prev = stateStore.get(chatId) || {};
+    stateStore.set(chatId, {
+        ...prev,
+        ...data,
+        updatedAt: Date.now()
+    });
 }
 
-export function clearState(userId) {
-    if (!userId) return;
-    userState.delete(userId);
+/**
+ * Очистить состояние чата полностью
+ * @param {number|string} chatId
+ */
+export function clearState(chatId) {
+    if (!chatId) return;
+    stateStore.delete(chatId);
 }
 
-export const lastBotMessage = new Map();
+export function dumpState() {
+    return Array.from(stateStore.entries());
+}
