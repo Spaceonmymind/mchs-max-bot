@@ -1,22 +1,11 @@
-import { lastBotMessage } from "./state.js"
-import { getChatId } from "./getChatId.js"
+// src/utils/cleanChat.js
 
 export async function cleanChat(ctx) {
-    const chatId = getChatId(ctx)
-    if (!chatId) {
+    if (!ctx || !ctx.chat) {
         return
     }
 
-    if (lastBotMessage.has(chatId)) {
-        const botMid = lastBotMessage.get(chatId)
-
-        try {
-            await ctx.api.deleteMessage({
-                chatId: chatId,
-                messageId: botMid
-            })
-        } catch (e) {
-            console.log("Ошибка удаления сообщения бота", e.message)
-        }
-    }
+    // Временно ничего не чистим
+    // Массовое удаление сообщений вызывает лаги в MAX API
+    return
 }

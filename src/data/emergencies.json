@@ -130,5 +130,29 @@
     "message": "Ооо",
     "timestamp": 1765356724737,
     "status": "answered"
+  },
+  {
+    "chatId": 83345405,
+    "phone": "+79195994669",
+    "type": "custom",
+    "message": "Все хорошо",
+    "timestamp": 1766517677586,
+    "status": "new"
+  },
+  {
+    "chatId": 83345405,
+    "phone": "+79195994669",
+    "type": "drone",
+    "message": "Так",
+    "timestamp": 1766517691862,
+    "status": "new"
+  },
+  {
+    "chatId": 83345405,
+    "phone": "+79195994669",
+    "type": "custom",
+    "message": "Проверка номер два",
+    "timestamp": 1766518080653,
+    "status": "answered"
   }
 ]
