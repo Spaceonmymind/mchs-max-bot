@@ -10,11 +10,12 @@ import messageHandler from "./src/handlers/messageHandler.js"
 import { setState, clearState, getState } from "./src/utils/state.js"
 import { getChatId } from "./src/utils/getChatId.js"
 import { cleanChat } from "./src/utils/cleanChat.js"
+import path from 'path';
 
 dotenv.config()
 
 const bot = new Bot(process.env.BOT_TOKEN)
-const logoPath = "/Users/egorgladkih/Visual Studo Projects/mchs-max-bot/assets/logo.png"
+const logoPath = path.resolve('assets', 'logo.png');
 
 console.log("BOOTING BOT")
 
